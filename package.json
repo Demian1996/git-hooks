@@ -28,7 +28,8 @@
     "clean": "rimraf dist types",
     "check-types": "tsc --noEmit",
     "build": "npm run clean && rollup -c ./rollupConfig/rollup.cjs.js",
-    "deploy": "npm run clean && rollup -c ./rollupConfig/rollup.cjs.js && gh-pages -d dist"
+    "deploy:github": "npm run clean && rollup -c ./rollupConfig/rollup.cjs.js && gh-pages -d dist",
+    "deploy:gitlab": "npm run clean && rollup -c ./rollupConfig/rollup.cjs.js && gh-pages -d dist -r git@gitlab.gz.cvte.cn:student/cbb/frontend-components/easiclass-common/git-hooks.git"
   },
   "name": "git-hooks-new",
   "main": "dist/git-hooks-new.js",
