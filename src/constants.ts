@@ -5,7 +5,7 @@ const PluginRecord = {
   EslintPlugin: 'eslint-plugin',
   CommitMessagePlugin: 'commit-message-plugin',
   LoggerPlugin: 'logger-plugin',
-  CommitCheckPlugin: 'commit-check-plugin',
+  CommitMessageCheckPlugin: 'commit-message-check-plugin',
 };
 
 export { PluginRecord };
