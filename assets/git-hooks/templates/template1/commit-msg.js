@@ -4,7 +4,7 @@ const process = require('process');
 class CommitMsgHook {
   constructor() {
     this.core = new GhCore({
-      whiteList: ['commit-check-plugin'],
+      whiteList: [],
     });
   }
 
@@ -16,6 +16,12 @@ class CommitMsgHook {
 
       // 读取 commit
       const commitMsg = this.core['commit-message-plugin'].readCommitMessage();
+
+      const commitMsgCheckresult = this.core['commit-message-check-plugin'].standardChecker(commitMsg);
+      if (!commitMsgCheckresult.isPass) {
+        console.error(`commitMessage-不符合规范-缺少：+ ${commitMsgCheckresult.missKeywords.join(',')}`);
+        process.exit(1);
+      }
 
       // 修改 commit
       this.core['commit-message-plugin'].writeCommitMessage(`[linted]${commitMsg}`);
