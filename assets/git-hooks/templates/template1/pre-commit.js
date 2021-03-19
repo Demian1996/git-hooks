@@ -1,50 +1,44 @@
+const AbstractHook = require('../AbstractHook');
 const { exec } = require('child_process');
 const GhCore = require('../../git-hooks-new.js');
 const { ESLint } = require('eslint');
+const process = require('process');
 
-class PreCommitHook {
+class PreCommitHook extends AbstractHook {
   constructor() {
+    super();
     this.core = new GhCore({
       whiteList: ['eslint-plugin'],
-    });
-  }
-
-  run() {
-    // 执行 git 的命令
-    this._getDiffFileList()
-      .then((fileList) => {
-        this._lintFileList(fileList);
-      })
-      .catch((error) => {
-        logger.error(error);
-        process.exit(1);
-      });
-  }
-
-  _getDiffFileList() {
-    return new Promise((resolve, reject) => {
-      exec('git diff --cached --diff-filter=ACMR --name-only', (error, stdout) => {
-        if (error) {
-          reject(`exec error: ${error}`);
-        }
-        // 对返回结果进行处理，拿到要检查的文件列表
-        const diffFileList = stdout
-          .split('\n')
-          .filter((diffFile) => /(\.js|\.jsx|\.ts|\.tsx)(\n|$)/gi.test(diffFile));
-
-        resolve(diffFileList);
-      });
-    });
-  }
-
-  _lintFileList(fileList) {
-    const eslintPlugin = this.core['eslint-plugin'];
-    eslintPlugin.setFileList(fileList);
-    return eslintPlugin.lintFiles(new ESLint()).then(() => {
-      eslintPlugin.output();
     });
   }
 }
 
 const hook = new PreCommitHook();
+hook.use(async (core, next) => {
+  core.fileList = await new Promise((resolve, reject) => {
+    exec('git diff --cached --diff-filter=ACMR --name-only', async (err, stdout) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(
+        stdout.split('\n').filter((diffFile) => /(\.js|\.jsx|\.ts|\.tsx)(\n|$)/gi.test(diffFile))
+      );
+    });
+  });
+  await next();
+});
+
+hook.use(async (core, next) => {
+  const eslintPlugin = core['eslint-plugin'];
+  eslintPlugin.setFileList(core.fileList);
+  await eslintPlugin.lintFiles(new ESLint());
+  const isOk = eslintPlugin.getResult();
+
+  if (!isOk) {
+    process.exit(1);
+  }
+
+  await next();
+});
+
 hook.run();

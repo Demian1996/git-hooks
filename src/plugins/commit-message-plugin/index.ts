@@ -1,14 +1,15 @@
-import GhCore from '../../core';
-import fs from 'fs';
-import { PluginRecord } from '../../constants';
-
 /*
  * @Author: wangdengzhi
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: wangdengzhi
- * @Last Modified time: 2021-03-12 17:25:57
+ * @Last Modified time: 2021-03-19 14:43:57
  * @Description: 自定义Commit信息插件
+ * 纯工具式插件，无需提供责任链接口
  */
+import GhCore from '../../core';
+import fs from 'fs';
+import { PluginRecord } from '../../constants';
+
 class CommitMessagePlugin {
   name = PluginRecord.CommitMessagePlugin;
   /**

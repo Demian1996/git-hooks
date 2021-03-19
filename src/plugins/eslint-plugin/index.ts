@@ -1,13 +1,14 @@
-import { PluginRecord } from '../../constants';
-import GhCore from '../../core';
-
 /*
  * @Author: wangdengzhi
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: wangdengzhi
- * @Last Modified time: 2021-03-12 17:26:09
+ * @Last Modified time: 2021-03-19 15:38:21
  * @Description: eslint插件
  */
+import { PluginRecord } from '../../constants';
+import GhCore from '../../core';
+import process from 'process';
+
 class EslintPlugin {
   name = PluginRecord.EslintPlugin;
   /**
@@ -54,7 +55,7 @@ class EslintPlugin {
     });
   }
 
-  output() {
+  getResult() {
     this._outputLabelLine('ESLint Start');
     this.resultList.forEach((result) => {
       if (result.messages && result.messages.length > 0) {
@@ -80,15 +81,15 @@ class EslintPlugin {
         } warning)`
       );
       this._outputLabelLine('ESLint End');
-      process.exit(1);
+      return false;
     } else if (this.warningCount >= 1) {
       this._outputLabelLine('ESLint Warned');
       this._outputLabelLine('ESLint End');
-      process.exit(0);
+      return true;
     } else {
       this._outputLabelLine('ESLint Passed');
       this._outputLabelLine('ESLint End');
-      process.exit(0);
+      return true;
     }
   }
   _outputLabelLine(s: string) {
