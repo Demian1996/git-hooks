@@ -1,13 +1,14 @@
-import { PluginRecord } from '../../constants';
-import GhCore from '../../core';
-
 /*
  * @Author: wangdengzhi
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: wangdengzhi
- * @Last Modified time: 2021-03-12 17:26:09
+ * @Last Modified time: 2021-03-19 14:43:42
  * @Description: eslint插件
  */
+import { PluginRecord } from '../../constants';
+import GhCore from '../../core';
+import process from 'process';
+
 class EslintPlugin {
   name = PluginRecord.EslintPlugin;
   /**

@@ -1,4 +1,4 @@
-type GhPlugin = (core: Core) => void;
+type GhPlugin = (core: any) => void;
 
 interface GhConfig {
   /**

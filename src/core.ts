@@ -17,8 +17,8 @@ class GhCore implements GhCore {
   pluginList: string[];
   [key: string]: any;
 
-  constructor(config: GhConfig) {
-    this.config = config;
+  constructor(config?: GhConfig) {
+    this.config = config || {};
     this.logger = {
       log: console.log,
       warn: console.log,
@@ -33,7 +33,11 @@ class GhCore implements GhCore {
    */
   pluginRecordCall() {
     if (GhCore.pluginRecord) {
-      const defaultPluginList = [PluginRecord.CommitMessagePlugin, PluginRecord.LoggerPlugin, PluginRecord.CommitMessageCheckPlugin];
+      const defaultPluginList = [
+        PluginRecord.CommitMessagePlugin,
+        PluginRecord.LoggerPlugin,
+        PluginRecord.CommitMessageCheckPlugin,
+      ];
       // 如果黑名单存在，就要将默认内置的插件和不在黑名单中的插件筛选出来
       if (this.config.blackList) {
         this.pluginList = this.pluginList.filter(
