@@ -42,8 +42,8 @@ class AbstractHook {
    * @description 聚合执行所有逻辑
    */
   run() {
+    const self = this;
     const middlewareList = this.middlewareList;
-    // 统一在此处打印错误log和退出脚本
     return dispatch(0).catch((err) => {
       console.log(err);
       process.exit(1);
@@ -55,7 +55,7 @@ class AbstractHook {
       }
       try {
         // 默认为当前的core
-        const ctx = this.core || {};
+        const ctx = self.core || {};
         const result = middleware(ctx, dispatch.bind(null, index + 1));
         return Promise.resolve(result);
       } catch (err) {

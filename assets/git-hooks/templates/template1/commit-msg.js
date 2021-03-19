@@ -28,9 +28,10 @@ hook.use(async (core, next) => {
 hook.use(async (core, next) => {
   const commitMsgCheckResult = core['commit-message-check-plugin'].standardChecker(core.commitMsg);
   if (!commitMsgCheckResult.isPass) {
-    throw new Error(
+    core.logger.error(
       `commitMessage-不符合规范-缺少：+ ${commitMsgCheckResult.missKeywords.join(',')}`
     );
+    process.exit(1);
   }
 });
 
