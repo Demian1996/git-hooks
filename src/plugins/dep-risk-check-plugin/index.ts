@@ -2,7 +2,7 @@
  * @Author: hanks
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: hanks
- * @Last Modified time: 2021-03-22 16:58:48
+ * @Last Modified time: 2021-03-22 18:54:05
  * @Description: 依赖风险检查
  *
  */
@@ -23,16 +23,17 @@ class DepRiskCheckPlugin {
   }
 
   async startCheck(projectPath: string) {
+    this.monorepoPaths = [];
     this._findMonoRepoPath(path.resolve(projectPath), 4);
-    const repoToCheck = this._checkCachedResult();
-    const riskPackages = await this._checkDependencyRisk(repoToCheck);
+    const repoToCheck = this._checkCachedResult(projectPath);
+    const riskPackages = await this._checkDependencyRisk(repoToCheck, projectPath);
     return riskPackages;
   }
   /**
     @description 找出目录下所有项目及子项目路径
      */
   _findMonoRepoPath(dir: string, index: number) {
-    this.monorepoPaths = [];
+
     const filelist = fs.readdirSync(dir)
     if (filelist.indexOf('package.json') !== -1) {
       this.monorepoPaths.push(dir);
@@ -53,24 +54,30 @@ class DepRiskCheckPlugin {
   /**
   @description 对比检测缓存以加快二次检查
    */
-  _checkCachedResult() {
-    const depHashFile = path.resolve(os.homedir(), '.depHash.json');
-    const depHashMap: Map<string, string> = new Map();
+  _checkCachedResult(projectPath: string) {
+    const depHashFile = path.resolve(os.homedir(), `.${md5(projectPath)}-depHash.json`);
+    const depHashMap: Record<string, string> = {};
     this.monorepoPaths.forEach((repoPath: string) => {
       const packageFile = fs.readFileSync(path.join(repoPath, 'package.json'), { encoding: 'utf-8' });
       const packageJson = JSON.parse(packageFile);
       const depHash: string = md5(JSON.stringify({ ...packageJson.devDependencies, ...packageJson.dependencies }));
-      depHashMap.set(repoPath, depHash);
+      depHashMap[repoPath] = depHash;
     })
 
-    const repoToCheck = []
+    let repoToCheck = []
     if (fs.existsSync(depHashFile)) {
-      const cacheHashJson = JSON.parse(fs.readFileSync(depHashFile, { encoding: 'utf-8' }));
-      for (const key in depHashMap) {
-        if (cacheHashJson[key] !== depHashMap.get(key)) {
-          repoToCheck.push(key);
-        }
+      try {
+        const cacheHashJson = JSON.parse(fs.readFileSync(depHashFile, { encoding: 'utf-8' })); 
+        for (const key in depHashMap) {
+          if (cacheHashJson[key] !== depHashMap[key]) {
+            repoToCheck.push(key);
+          }
+        } 
+      } catch (error) {
+        repoToCheck = this.monorepoPaths;
       }
+    } else {
+      repoToCheck = this.monorepoPaths;
     }
     fs.writeFile(depHashFile, JSON.stringify(depHashMap), { encoding: 'utf-8' }, () => { });
     return repoToCheck;
@@ -79,11 +86,11 @@ class DepRiskCheckPlugin {
   /**
  @description 检查各路径下依赖风险
   */
-  async _checkDependencyRisk(repoToCheck: string[]) {
-    const depChecks = repoToCheck.map((path) => {
+  async _checkDependencyRisk(repoToCheck: string[], projectPath: string) {
+    const depChecks = repoToCheck.map((repoPath) => {
       return new Promise((res) => {
         lincenseChecker.init({
-          start: path,
+          start: repoPath,
           direct: true,
           exclude: 'MIT,BSD, WTFPL, Apache, Undefined, ISC, Public Domain, Unlicense, CC-BY-3.0, CC0-1.0, CC-BY-4.0,UNKNOWN,Apache-2.0',
         }, function (e: any, packages: any) {
@@ -93,6 +100,10 @@ class DepRiskCheckPlugin {
               riskPackages.push(packages[key]);
             }
           }
+            const depHashFile = path.resolve(os.homedir(), `.${md5(projectPath)}-depHash.json`);
+            const cacheHashJson = JSON.parse(fs.readFileSync(depHashFile, { encoding: 'utf-8' }));
+            delete cacheHashJson[repoPath];
+            fs.writeFile(depHashFile, JSON.stringify(cacheHashJson), { encoding: 'utf-8' }, () => { });
           res(riskPackages);
         })
       })
@@ -102,6 +113,7 @@ class DepRiskCheckPlugin {
     const riskPackages = await Promise.all(depChecks);
     let flatArray: any = [];
     flatArray = flatArray.concat(...riskPackages);
+    return flatArray;
   }
 
 }

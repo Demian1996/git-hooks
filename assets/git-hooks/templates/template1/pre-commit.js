@@ -7,9 +7,7 @@ const process = require('process');
 class PreCommitHook extends AbstractHook {
   constructor() {
     super();
-    this.core = new GhCore({
-      whiteList: ['eslint-plugin'],
-    });
+    this.core = new GhCore({});
   }
 }
 
