@@ -1,6 +1,7 @@
 import EslintPlugin from './plugins/eslint-plugin/index';
 import CommitMessagePlugin from './plugins/commit-message-plugin';
 import CommitMessageCheckPlugin from './plugins/commit-message-check-plugin';
+import RiskCheckPlugin from './plugins/dep-risk-check-plugin';
 import Core from './core';
 import { PluginRecord } from './constants';
 
@@ -13,6 +14,10 @@ Core.install(PluginRecord.CommitMessagePlugin, (core: Core) => {
 });
 Core.install(PluginRecord.CommitMessageCheckPlugin, (core: Core) => {
   core[PluginRecord.CommitMessageCheckPlugin] = new CommitMessageCheckPlugin(core);
+});
+
+Core.install(PluginRecord.RiskCheckPlugin, (core: Core) => {
+  core[PluginRecord.RiskCheckPlugin] = new RiskCheckPlugin(core);
 });
 
 export default Core;

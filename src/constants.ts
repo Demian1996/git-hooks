@@ -6,6 +6,7 @@ const PluginRecord = {
   CommitMessagePlugin: 'commit-message-plugin',
   LoggerPlugin: 'logger-plugin',
   CommitMessageCheckPlugin: 'commit-message-check-plugin',
+  RiskCheckPlugin: 'risk-check-plugin'
 };
 
 export { PluginRecord };
