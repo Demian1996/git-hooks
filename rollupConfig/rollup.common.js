@@ -1,6 +1,7 @@
 import pkg from '../package.json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import jsonplugin from '@rollup/plugin-json';
 
 const makeExternalPredicate = (externalArr) => {
   if (externalArr.length === 0) {
@@ -12,12 +13,13 @@ const makeExternalPredicate = (externalArr) => {
 
 export default {
   input: 'src/index.ts',
-  external: makeExternalPredicate([
-    ...Object.keys(pkg.dependencies || {}),
-    ...Object.keys(pkg.peerDependencies || {}),
-  ]),
+  // external: makeExternalPredicate([
+  //   ...Object.keys(pkg.dependencies || {}),
+  //   ...Object.keys(pkg.peerDependencies || {}),
+  // ]),
   inlineDynamicImports: true,
   plugins: [
+    jsonplugin(),
     nodeResolve({
       extensions: ['.js', '.ts'],
     }),

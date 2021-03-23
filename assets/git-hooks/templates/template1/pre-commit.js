@@ -7,9 +7,7 @@ const process = require('process');
 class PreCommitHook extends AbstractHook {
   constructor() {
     super();
-    this.core = new GhCore({
-      whiteList: ['eslint-plugin'],
-    });
+    this.core = new GhCore({});
   }
 }
 
@@ -40,5 +38,16 @@ hook.use(async (core, next) => {
 
   await next();
 });
+
+hook.use(async (core, next) => {
+  const riskCheck = core['risk-check-plugin'];
+  const projectPath = hook.getRepositoryPath();
+  const riskPackages = await riskCheck.startCheck(projectPath);
+  if (riskPackages.length > 0) {
+    core.logger.error('检测到有以下依赖风险项');
+    core.logger.error(riskPackages);
+  }
+  await next();
+})
 
 hook.run();

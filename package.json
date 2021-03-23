@@ -35,5 +35,12 @@
   "name": "git-hooks-new",
   "main": "dist/git-hooks-new.js",
   "types": "types/index.d.ts",
-  "homepage": "./"
+  "homepage": "./",
+  "dependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/license-checker": "^25.0.0",
+    "@types/md5": "^2.2.1",
+    "license-checker": "^25.0.1",
+    "md5": "^2.3.0"
+  }
 }
