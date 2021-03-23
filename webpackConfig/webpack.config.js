@@ -19,7 +19,7 @@ module.exports = smp.wrap({
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
   },
   target: 'node',
-  mode: 'production',
+  mode: 'development',
   module: {
     rules: [
       {
@@ -36,6 +36,6 @@ module.exports = smp.wrap({
     new CopyWebpackPlugin({
       patterns: [{ from: 'assets/git-hooks' }],
     }),
-    new UglifyJsPlugin(),
+    // new UglifyJsPlugin(),
   ],
 });
