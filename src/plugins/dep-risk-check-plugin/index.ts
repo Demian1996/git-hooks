@@ -2,11 +2,11 @@
  * @Author: hanks
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: hanks
- * @Last Modified time: 2021-03-22 18:54:05
+ * @Last Modified time: 2021-03-23 10:29:23
  * @Description: 依赖风险检查
  *
  */
-const lincenseChecker = require('license-checker');
+import lincenseChecker from 'license-checker';
 import path from 'path';
 import fs from 'fs';
 import md5 from 'md5';
@@ -92,7 +92,7 @@ class DepRiskCheckPlugin {
         lincenseChecker.init({
           start: repoPath,
           direct: true,
-          exclude: 'MIT,BSD, WTFPL, Apache, Undefined, ISC, Public Domain, Unlicense, CC-BY-3.0, CC0-1.0, CC-BY-4.0,UNKNOWN,Apache-2.0',
+          exclude: ['MIT', 'BSD', 'WTFPL', 'Apache', 'Undefined', 'ISC', 'Public Domain', 'Unlicense', 'CC-BY-3.0', 'CC0-1.0', 'CC-BY-4.0', 'UNKNOWN', 'Apache-2.0', 'Python-2.0'],
         }, function (e: any, packages: any) {
           const riskPackages = [];
           for (const key in packages) {
