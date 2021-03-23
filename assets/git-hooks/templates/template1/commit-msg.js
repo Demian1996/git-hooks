@@ -1,5 +1,5 @@
 const AbstractHook = require('../AbstractHook');
-const GhCore = require('../../git-hooks-new.js');
+const GhCore = require('../../git-hooks-new.js').default;
 const process = require('process');
 
 class CommitMsgHook extends AbstractHook {

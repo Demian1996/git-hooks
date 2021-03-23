@@ -1,12 +1,12 @@
 /*
  * @Author: hanks
  * @Date: 2021-03-12 11:01:39
- * @Last Modified by: hanks
- * @Last Modified time: 2021-03-23 10:29:23
+ * @Last Modified by: wangdengzhi
+ * @Last Modified time: 2021-03-23 11:32:54
  * @Description: 依赖风险检查
  *
  */
-import lincenseChecker from 'license-checker';
+import licenseChecker from 'license-checker';
 import path from 'path';
 import fs from 'fs';
 import md5 from 'md5';
@@ -89,7 +89,7 @@ class DepRiskCheckPlugin {
   async _checkDependencyRisk(repoToCheck: string[], projectPath: string) {
     const depChecks = repoToCheck.map((repoPath) => {
       return new Promise((res) => {
-        lincenseChecker.init({
+        licenseChecker.init({
           start: repoPath,
           direct: true,
           exclude: ['MIT', 'BSD', 'WTFPL', 'Apache', 'Undefined', 'ISC', 'Public Domain', 'Unlicense', 'CC-BY-3.0', 'CC0-1.0', 'CC-BY-4.0', 'UNKNOWN', 'Apache-2.0', 'Python-2.0'],
