@@ -1,6 +1,6 @@
 const AbstractHook = require('../AbstractHook');
 const { exec } = require('child_process');
-const GhCore = require('../../git-hooks-new.js');
+const GhCore = require('../../git-hooks-new.js').default;
 const { ESLint } = require('eslint');
 const process = require('process');
 
@@ -48,6 +48,6 @@ hook.use(async (core, next) => {
     core.logger.error(riskPackages);
   }
   await next();
-})
+});
 
 hook.run();

@@ -2,12 +2,11 @@
  * @Author: wangdengzhi
  * @Date: 2021-03-12 11:01:39
  * @Last Modified by: wangdengzhi
- * @Last Modified time: 2021-03-19 15:38:21
+ * @Last Modified time: 2021-03-23 11:29:27
  * @Description: eslint插件
  */
 import { PluginRecord } from '../../constants';
 import GhCore from '../../core';
-import process from 'process';
 
 class EslintPlugin {
   name = PluginRecord.EslintPlugin;

@@ -4,6 +4,7 @@ module.exports = {
       '@babel/preset-env',
       // 待配置
     ],
+    '@babel/preset-typescript',
   ],
-  plugins: ['@babel/plugin-transform-runtime'],
+  plugins: ['@babel/plugin-proposal-class-properties', '@babel/plugin-transform-runtime'],
 };
